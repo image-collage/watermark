@@ -7,7 +7,7 @@ function App() {
   const [files, setFiles] = useState([]);
   const [outputImage, setOutputImage] = useState(null);
   const [viewerUrl, setViewerUrl] = useState(null);
-const [directUrl, setDirectUrl] = useState(null);
+  const [directUrl, setDirectUrl] = useState(null);
 
   const onDrop = useCallback((acceptedFiles) => {
     setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
@@ -47,31 +47,23 @@ const [directUrl, setDirectUrl] = useState(null);
   
     const formData = new FormData();
     files.forEach((file) => formData.append("files", file));
-  
+
     try {
       // Make POST request to Flask backend
-      const response = await axios.post(
-        "https://backend-pvan.onrender.com/create-collage/",
-        formData,
-        {
-          responseType: "json",  // Expecting JSON response with URLs
-        }
-      );
-  
-      // Set the output image and URLs from the backend response
+      const response = await axios.post("https://backend-pvan.onrender.com/create-collage/", formData, {
+        responseType: "json",
+      });
+
       const { viewer_url, direct_url } = response.data;
+      
       setViewerUrl(viewer_url);
       setDirectUrl(direct_url);
-      const blob = new Blob([response.data.collage_image], { type: "image/jpeg" });
-      const url = URL.createObjectURL(blob);
-      setOutputImage(url);
-  
+      setOutputImage(viewer_url); // Display the image after upload
     } catch (error) {
       console.error("Error creating collage:", error);
       alert("An error occurred. Please try again.");
     }
   };
-  
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -79,22 +71,20 @@ const [directUrl, setDirectUrl] = useState(null);
     accept: "image/*",
   });
 
-  const copyToClipboard = (url) => {
-    navigator.clipboard.writeText(url).then(() => {
-      alert("URL copied to clipboard!");
-    });
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
   };
 
   return (
     <div className="container">
       <h1 className="title">Image Collage Creator</h1>
-  
+
       <div {...getRootProps()} className="dropzone">
         <input {...getInputProps()} onChange={handleFileChange} />
         <p>Drag & Drop your files here or click to select files</p>
         <p>Or use Ctrl+V to paste images</p>
       </div>
-  
+
       <div className="file-previews">
         {files.map((file, index) => (
           <div key={index} className="file-preview">
@@ -112,11 +102,11 @@ const [directUrl, setDirectUrl] = useState(null);
           </div>
         ))}
       </div>
-  
+
       <button onClick={createCollage} className="create-button" disabled={files.length !== 4}>
         Create Magic
       </button>
-  
+
       {outputImage && (
         <div className="output-container">
           <h2>Collage Output</h2>
@@ -129,7 +119,7 @@ const [directUrl, setDirectUrl] = useState(null);
               Save Image
             </a>
           </div>
-  
+
           {/* Viewer URL */}
           {viewerUrl && (
             <div className="url-container">
@@ -142,7 +132,7 @@ const [directUrl, setDirectUrl] = useState(null);
               </button>
             </div>
           )}
-  
+
           {/* Direct URL */}
           {directUrl && (
             <div className="url-container">
@@ -159,6 +149,6 @@ const [directUrl, setDirectUrl] = useState(null);
       )}
     </div>
   );
-}  
+}
 
 export default App;
