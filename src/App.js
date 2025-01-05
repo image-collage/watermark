@@ -6,6 +6,8 @@ import "./App.css";  // Import the CSS file
 function App() {
   const [files, setFiles] = useState([]);
   const [outputImage, setOutputImage] = useState(null);
+  const [viewerUrl, setViewerUrl] = useState(null);
+const [directUrl, setDirectUrl] = useState(null);
 
   const onDrop = useCallback((acceptedFiles) => {
     setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
@@ -48,13 +50,22 @@ function App() {
   
     try {
       // Make POST request to Flask backend
-      const response = await axios.post("https://backend-pvan.onrender.com/create-collage/", formData, {
-        responseType: "blob",
-      });
+      const response = await axios.post(
+        "https://backend-pvan.onrender.com/create-collage/",
+        formData,
+        {
+          responseType: "json",  // Expecting JSON response with URLs
+        }
+      );
   
-      const blob = new Blob([response.data], { type: "image/jpeg" });
+      // Set the output image and URLs from the backend response
+      const { viewer_url, direct_url } = response.data;
+      setViewerUrl(viewer_url);
+      setDirectUrl(direct_url);
+      const blob = new Blob([response.data.collage_image], { type: "image/jpeg" });
       const url = URL.createObjectURL(blob);
       setOutputImage(url);
+  
     } catch (error) {
       console.error("Error creating collage:", error);
       alert("An error occurred. Please try again.");
@@ -68,16 +79,22 @@ function App() {
     accept: "image/*",
   });
 
+  const copyToClipboard = (url) => {
+    navigator.clipboard.writeText(url).then(() => {
+      alert("URL copied to clipboard!");
+    });
+  };
+
   return (
     <div className="container">
       <h1 className="title">Image Collage Creator</h1>
-
+  
       <div {...getRootProps()} className="dropzone">
         <input {...getInputProps()} onChange={handleFileChange} />
         <p>Drag & Drop your files here or click to select files</p>
         <p>Or use Ctrl+V to paste images</p>
       </div>
-
+  
       <div className="file-previews">
         {files.map((file, index) => (
           <div key={index} className="file-preview">
@@ -95,11 +112,11 @@ function App() {
           </div>
         ))}
       </div>
-
+  
       <button onClick={createCollage} className="create-button" disabled={files.length !== 4}>
         Create Magic
       </button>
-
+  
       {outputImage && (
         <div className="output-container">
           <h2>Collage Output</h2>
@@ -112,10 +129,36 @@ function App() {
               Save Image
             </a>
           </div>
+  
+          {/* Viewer URL */}
+          {viewerUrl && (
+            <div className="url-container">
+              <p>
+                <strong>Viewer URL:</strong>
+                <span className="url-text">{viewerUrl}</span>
+              </p>
+              <button className="copy-button" onClick={() => copyToClipboard(viewerUrl)}>
+                Copy
+              </button>
+            </div>
+          )}
+  
+          {/* Direct URL */}
+          {directUrl && (
+            <div className="url-container">
+              <p>
+                <strong>Direct URL:</strong>
+                <span className="url-text">{directUrl}</span>
+              </p>
+              <button className="copy-button" onClick={() => copyToClipboard(directUrl)}>
+                Copy
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
   );
-}
+}  
 
 export default App;

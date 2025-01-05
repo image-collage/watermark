@@ -129,3 +129,89 @@ body {
 .action-link:hover {
   color: #2e59d9;
 }
+
+
+.App {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f7f7f7;
+  height: 100vh;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+input[type="file"] {
+  margin-bottom: 20px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.result-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.collage-image {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.output-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.output-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.output-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.action-link {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.url-container {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.url-text {
+  word-break: break-all;
+  display: block;
+  margin: 5px 0;
+}
+
+.copy-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.copy-button:hover {
+  background-color: #0056b3;
+}
