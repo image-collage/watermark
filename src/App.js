@@ -1,13 +1,14 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
-import "./App.css";  // Import the CSS file
+import "./App.css"; // Import the CSS file
 
 function App() {
   const [files, setFiles] = useState([]);
   const [outputImage, setOutputImage] = useState(null);
   const [viewerUrl, setViewerUrl] = useState(null);
   const [directUrl, setDirectUrl] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // New state for loader
 
   const onDrop = useCallback((acceptedFiles) => {
     setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
@@ -44,24 +45,31 @@ function App() {
       alert("Please upload exactly 4 images.");
       return;
     }
-  
+
     const formData = new FormData();
     files.forEach((file) => formData.append("files", file));
 
+    setIsLoading(true); // Show loader
+
     try {
-      // Make POST request to Flask backend
-      const response = await axios.post("https://backend-pvan.onrender.com/create-collage/", formData, {
-        responseType: "json",
-      });
+      const response = await axios.post(
+        "https://backend-pvan.onrender.com/create-collage/",
+        formData,
+        {
+          responseType: "json",
+        }
+      );
 
       const { viewer_url, direct_url } = response.data;
-      
+
       setViewerUrl(viewer_url);
       setDirectUrl(direct_url);
       setOutputImage(viewer_url); // Display the image after upload
     } catch (error) {
       console.error("Error creating collage:", error);
       alert("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false); // Hide loader
     }
   };
 
@@ -103,19 +111,39 @@ function App() {
         ))}
       </div>
 
-      <button onClick={createCollage} className="create-button" disabled={files.length !== 4}>
-        Create Magic
+      <button
+        onClick={createCollage}
+        className="create-button"
+        disabled={files.length !== 4 || isLoading} // Disable button while loading
+      >
+        {isLoading ? "Creating..." : "Create Magic"}
       </button>
+
+      {isLoading && (
+        <div className="loader">
+          <div className="spinner"></div>
+          <p>Processing your collage...</p>
+        </div>
+      )}
 
       {outputImage && (
         <div className="output-container">
           <h2>Collage Output</h2>
           <img src={outputImage} alt="Collage" className="output-image" />
           <div className="output-actions">
-            <a href={outputImage} target="_blank" rel="noreferrer" className="action-link">
+            <a
+              href={outputImage}
+              target="_blank"
+              rel="noreferrer"
+              className="action-link"
+            >
               Open in New Tab
             </a>
-            <a href={outputImage} download="collage.jpg" className="action-link">
+            <a
+              href={outputImage}
+              download="collage.jpg"
+              className="action-link"
+            >
               Save Image
             </a>
           </div>
@@ -127,7 +155,10 @@ function App() {
                 <strong>Viewer URL:</strong>
                 <span className="url-text">{viewerUrl}</span>
               </p>
-              <button className="copy-button" onClick={() => copyToClipboard(viewerUrl)}>
+              <button
+                className="copy-button"
+                onClick={() => copyToClipboard(viewerUrl)}
+              >
                 Copy
               </button>
             </div>
@@ -140,7 +171,10 @@ function App() {
                 <strong>Direct URL:</strong>
                 <span className="url-text">{directUrl}</span>
               </p>
-              <button className="copy-button" onClick={() => copyToClipboard(directUrl)}>
+              <button
+                className="copy-button"
+                onClick={() => copyToClipboard(directUrl)}
+              >
                 Copy
               </button>
             </div>
