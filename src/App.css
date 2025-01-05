@@ -1,0 +1,131 @@
+/* App.css */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f7f9fb;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.dropzone {
+  border: 2px dashed #4e73df;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.dropzone:hover {
+  background-color: #f0f7ff;
+}
+
+.dropzone p {
+  font-size: 1rem;
+  color: #4e73df;
+}
+
+.file-previews {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.file-preview {
+  position: relative;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.remove-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.remove-button:hover {
+  background-color: darkred;
+}
+
+.create-button {
+  background-color: #4e73df;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.create-button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.create-button:hover:not(:disabled) {
+  background-color: #2e59d9;
+}
+
+.output-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.output-image {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.output-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.action-link {
+  color: #4e73df;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.action-link:hover {
+  color: #2e59d9;
+}
